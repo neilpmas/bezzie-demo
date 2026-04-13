@@ -2,13 +2,17 @@ name = "bezzie-demo-worker"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
+[assets]
+directory = "../frontend/dist"
+
 [vars]
-AUTH0_DOMAIN = ""       # e.g. your-tenant.auth0.com
-AUTH0_CLIENT_ID = ""    # Auth0 Application Client ID
-AUTH0_AUDIENCE = ""     # e.g. https://api.bezzie-demo.com
-APP_BASE_URL = ""       # e.g. https://bezzie-demo.pages.dev
-UPSTREAM_URL = ""       # URL of the upstream Worker
+AUTH0_DOMAIN = "dummy.auth0.com"       # e.g. your-tenant.auth0.com
+AUTH0_CLIENT_ID = "dummy-client-id"    # Auth0 Application Client ID
+AUTH0_CLIENT_SECRET = "dummy-client-secret"
+AUTH0_AUDIENCE = "https://api.bezzie-demo.com"     # e.g. https://api.bezzie-demo.com
+APP_BASE_URL = "http://localhost:8787"       # e.g. https://bezzie-demo-worker.<account>.workers.dev
+UPSTREAM_URL = "http://localhost:8788"       # e.g. https://bezzie-demo-upstream.<account>.workers.dev
 
 [[kv_namespaces]]
 binding = "SESSION_KV"
-id = ""                 # fill in after running: wrangler kv namespace create SESSION_KV
+id = "SESSION_KV_ID"                 # fill in after: wrangler kv namespace create SESSION_KV

@@ -8,3 +8,5 @@ worker/.dev.vars
 upstream/.dev.vars
 
 .idea
+
+*.log
