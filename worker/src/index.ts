@@ -38,7 +38,7 @@ export default {
     app.get('/api/me', auth.middleware(), async (c) => {
       const res = await fetch(`${c.env.UPSTREAM_URL}/api/me`, {
         headers: {
-          Authorization: c.req.header('Authorization') ?? '',
+          Authorization: `Bearer ${c.var.accessToken}`,
         },
       })
       const data = await res.json()
