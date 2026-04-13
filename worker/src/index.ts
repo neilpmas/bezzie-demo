@@ -14,8 +14,6 @@ type Env = {
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    const app = new Hono<{ Bindings: Env; Variables: Variables }>()
-
     const auth = createBezzie({
       ...providers.auth0(env.AUTH0_DOMAIN),
       clientId: env.AUTH0_CLIENT_ID,
@@ -25,18 +23,16 @@ export default {
       baseUrl: env.APP_BASE_URL,
     })
 
-    // Mount auth routes
+    const app = new Hono<{ Bindings: Env; Variables: Variables }>()
+
     app.route('/auth', auth.routes())
 
-    // GET /api/user — public, returns user if logged in or null
-    // Used by the frontend nav to conditionally show the username
     app.get('/api/user', auth.optionalMiddleware(), (c) => {
       return c.json({ user: c.var.user ?? null })
     })
 
-    // GET /api/me — protected, proxies to upstream with Authorization: Bearer
     app.get('/api/me', auth.middleware(), async (c) => {
-      const res = await fetch(`${c.env.UPSTREAM_URL}/api/me`, {
+      const res = await fetch(`${env.UPSTREAM_URL}/api/me`, {
         headers: {
           Authorization: `Bearer ${c.var.accessToken}`,
         },

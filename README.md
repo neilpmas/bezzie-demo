@@ -44,6 +44,8 @@ You need two things in Auth0: an **Application** (for the OAuth flow) and an **A
 3. Type: **Regular Web Application**
 4. Click **Create**
 
+> **Why Regular Web Application and not Single Page Application?** Auth0's app type describes where the token exchange happens — not what the UI looks like. bezzie is a BFF: the *Worker* exchanges the auth code for tokens server-side using a client secret. That's a confidential client = Regular Web Application. A SPA type has no client secret and puts tokens in the browser, which is exactly what bezzie is designed to avoid.
+
 On the **Settings** tab, fill in:
 
 | Field | Value |
@@ -54,7 +56,9 @@ On the **Settings** tab, fill in:
 
 Scroll to **Advanced Settings → Grant Types** and ensure **Refresh Token** is checked.
 
-Scroll to **Advanced Settings → OAuth** and enable **Refresh Token Rotation** and **Refresh Token Expiration (Absolute)**.
+Back in the main **Settings** tab, scroll down to **Refresh Token Rotation** and enable **Allow Refresh Token Rotation**. Leave the Rotation Overlap Period at `0`.
+
+Continue scrolling to **Refresh Token Expiration** and enable both **Absolute Expiration** and **Idle Expiration**. The idle lifetime must be less than the absolute lifetime (e.g. `2592000` seconds = 30 days for absolute, `1296000` = 15 days for idle).
 
 Save changes. Note your **Domain**, **Client ID**, and **Client Secret** — you'll need them below.
 
@@ -78,6 +82,21 @@ cd frontend && npm install && cd ..
 ```
 
 ### 2. Configure the worker
+
+Create a KV namespace for local development:
+
+```sh
+cd worker && wrangler kv namespace create SESSION_KV --preview
+```
+
+Copy the `preview_id` from the output and add it to `worker/wrangler.toml`:
+
+```toml
+[[kv_namespaces]]
+binding = "SESSION_KV"
+id = ""           # fill in for production: wrangler kv namespace create SESSION_KV
+preview_id = ""   # paste the preview_id from the command above
+```
 
 Open `worker/wrangler.toml` and fill in your Auth0 values:
 
