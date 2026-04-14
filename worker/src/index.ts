@@ -10,7 +10,9 @@ type Env = {
   APP_BASE_URL: string
   UPSTREAM_URL: string
   SESSION_KV: KVNamespace
+  ASSETS: Fetcher  // add this
 }
+
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -40,6 +42,8 @@ export default {
       const data = await res.json()
       return c.json(data, res.status as any)
     })
+// Catch-all: delegate to static assets (serves index.html for unknown paths)
+    app.all('*', (c) => c.env.ASSETS.fetch(c.req.raw))
 
     return app.fetch(request, env, ctx)
   }
