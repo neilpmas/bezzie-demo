@@ -8,7 +8,7 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
-    "bezzie": "latest",
+    "bezzie": "^0.1.7",
     "hono": "^4.0.0"
   },
   "devDependencies": {

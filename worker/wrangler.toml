@@ -4,15 +4,18 @@ compatibility_date = "2024-01-01"
 
 [assets]
 directory = "../frontend/dist"
+not_found_handling = "single-page-application"
+
 
 [vars]
-AUTH0_DOMAIN = "dummy.auth0.com"       # e.g. your-tenant.auth0.com
-AUTH0_CLIENT_ID = "dummy-client-id"    # Auth0 Application Client ID
-AUTH0_CLIENT_SECRET = "dummy-client-secret"
+AUTH0_DOMAIN = ""       # set in .dev.vars for local dev, wrangler secret put for production
+AUTH0_CLIENT_ID = ""    # set in .dev.vars for local dev, wrangler secret put for production
 AUTH0_AUDIENCE = "https://api.bezzie-demo.com"     # e.g. https://api.bezzie-demo.com
 APP_BASE_URL = "http://localhost:8787"       # e.g. https://bezzie-demo-worker.<account>.workers.dev
 UPSTREAM_URL = "http://localhost:8788"       # e.g. https://bezzie-demo-upstream.<account>.workers.dev
 
 [[kv_namespaces]]
 binding = "SESSION_KV"
-id = "SESSION_KV_ID"                 # fill in after: wrangler kv namespace create SESSION_KV
+id = "SESSION_KV_ID"
+preview_id = "634eee0f9e724d8da37ad5b79c0405d3"
+            # fill in after: wrangler kv namespace create SESSION_KV

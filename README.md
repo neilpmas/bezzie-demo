@@ -109,19 +109,21 @@ APP_BASE_URL = "http://localhost:8787"
 UPSTREAM_URL = "http://localhost:8788"
 ```
 
-Then create `worker/.dev.vars` for the secret (this file is gitignored):
+Create `worker/.dev.vars` from the example (this file is gitignored):
 
 ```sh
 cp worker/.dev.vars.example worker/.dev.vars
 ```
 
-Edit `worker/.dev.vars` and fill in your real Client Secret:
+Edit `worker/.dev.vars` and fill in your real Auth0 values:
 
 ```
+AUTH0_DOMAIN=your-tenant.auth0.com
+AUTH0_CLIENT_ID=your-auth0-client-id
 AUTH0_CLIENT_SECRET=your-auth0-client-secret
 ```
 
-> **Note:** `wrangler.toml` has a placeholder `AUTH0_CLIENT_SECRET` under `[vars]` — this is overridden by `.dev.vars` during local dev. For production, use `wrangler secret put AUTH0_CLIENT_SECRET` and remove it from `wrangler.toml`.
+> For production, set these via `wrangler secret put AUTH0_DOMAIN` etc. — never commit real values to `wrangler.toml`.
 
 ### 3. Build the frontend
 
