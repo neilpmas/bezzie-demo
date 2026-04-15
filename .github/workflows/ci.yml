@@ -49,5 +49,5 @@ jobs:
           cache-dependency-path: upstream/package-lock.json
       - run: npm install
         working-directory: upstream
-      - run: npx tsc --noEmit
+      - run: npm run build
         working-directory: upstream
