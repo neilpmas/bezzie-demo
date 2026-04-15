@@ -2,9 +2,10 @@ name = "bezzie-demo-worker"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
-routes = [
-  { pattern = "bezzie-demo.neilmason.dev", custom_domain = true }
-]
+# Optional: add a custom domain once deployed
+# routes = [
+#   { pattern = "your-domain.com", custom_domain = true }
+# ]
 
 [assets]
 directory = "../frontend/dist"
@@ -13,13 +14,13 @@ binding = "ASSETS"
 
 
 [vars]
-AUTH0_DOMAIN = "dev-16c3oauv6q5ojze3.us.auth0.com"
-AUTH0_CLIENT_ID = "hKP0OAniWYz8SyUKZD6bIC4qCoDuZeAh"
-AUTH0_AUDIENCE = "https://api.bezzie-demo.com"
-APP_BASE_URL = "https://bezzie-demo.neilmason.dev"
-UPSTREAM_URL = "https://bezzie-demo-upstream.2z4gzgydkz.workers.dev"
+AUTH0_DOMAIN = ""       # e.g. your-tenant.us.auth0.com
+AUTH0_CLIENT_ID = ""    # from your Auth0 application
+AUTH0_AUDIENCE = ""     # e.g. https://api.your-project.com
+APP_BASE_URL = ""       # e.g. https://bezzie-demo-worker.<account>.workers.dev or your custom domain
+UPSTREAM_URL = ""       # URL of your deployed upstream worker
 
 [[kv_namespaces]]
 binding = "SESSION_KV"
-id = "fc4b9de0b8634eef94c6783374657715"
-preview_id = "634eee0f9e724d8da37ad5b79c0405d3"
+id = ""           # fill in after: wrangler kv namespace create SESSION_KV
+preview_id = ""   # fill in after: wrangler kv namespace create SESSION_KV --preview
