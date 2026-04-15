@@ -2,7 +2,7 @@
 
 A demo app for [bezzie](https://github.com/neilpmas/bezzie) — a BFF (Backend for Frontend) OAuth 2.0 auth library for Cloudflare Workers.
 
-**Live demo:** _coming soon_
+**Live demo:** [bezzie-demo.neilmason.dev](https://bezzie-demo.neilmason.dev)
 
 ---
 
@@ -193,7 +193,76 @@ cd frontend && npm run dev
 
 ## Deploy
 
-_Coming soon — deployment instructions for Cloudflare Workers + Pages._
+### 1. Deploy the upstream worker
+
+```sh
+cd upstream && npx wrangler deploy
+```
+
+Note the URL from the output (e.g. `https://bezzie-demo-upstream.<account>.workers.dev`).
+
+### 2. Create a production KV namespace
+
+```sh
+cd worker && npx wrangler kv namespace create SESSION_KV
+```
+
+Copy the `id` from the output into `worker/wrangler.toml`.
+
+### 3. Fill in `worker/wrangler.toml`
+
+```toml
+[vars]
+AUTH0_DOMAIN = "your-tenant.auth0.com"
+AUTH0_CLIENT_ID = "your-client-id"
+AUTH0_AUDIENCE = "https://api.bezzie-demo.com"
+APP_BASE_URL = "https://bezzie-demo-worker.<account>.workers.dev"
+UPSTREAM_URL = "https://bezzie-demo-upstream.<account>.workers.dev"
+
+[[kv_namespaces]]
+binding = "SESSION_KV"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-namespace-id"
+```
+
+### 4. Build the frontend
+
+```sh
+cd frontend && npm run build
+```
+
+### 5. Set the client secret
+
+```sh
+cd worker && npx wrangler secret put AUTH0_CLIENT_SECRET
+```
+
+### 6. Deploy the worker
+
+```sh
+cd worker && npx wrangler deploy
+```
+
+Note the URL from the output.
+
+### 7. Update Auth0
+
+In your Auth0 application settings, add the deployed worker URL to:
+- **Allowed Callback URLs:** `https://<your-worker-url>/auth/callback`
+- **Allowed Logout URLs:** `https://<your-worker-url>`
+- **Allowed Web Origins:** `https://<your-worker-url>`
+
+### 8. Optional: custom domain
+
+To use a custom domain (must be on Cloudflare), add to `worker/wrangler.toml`:
+
+```toml
+routes = [
+  { pattern = "your-domain.com", custom_domain = true }
+]
+```
+
+Then update `APP_BASE_URL` and your Auth0 URLs to match.
 
 ---
 
