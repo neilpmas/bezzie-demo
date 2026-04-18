@@ -7,6 +7,9 @@ dist/
 worker/.dev.vars
 upstream/.dev.vars
 
+# Production config — contains real values, not for source control
+worker/wrangler.production.toml
+
 .idea
 
 *.log
