@@ -1,3 +1,7 @@
 name = "bezzie-demo-upstream"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
+
+[vars]
+AUTH0_DOMAIN = ""
+AUTH0_AUDIENCE = ""
