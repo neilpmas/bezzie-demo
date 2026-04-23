@@ -14,7 +14,9 @@ type ApiUserResponse = {
 export default function App() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const [upstreamData, setUpstreamData] = useState<any>(null)
+  const [upstreamData, setUpstreamData] = useState<unknown>(null)
+  const [upstreamError, setUpstreamError] = useState<string | null>(null)
+  const [loginLoading, setLoginLoading] = useState(false)
   const path = window.location.pathname
 
   useEffect(() => {
@@ -24,8 +26,7 @@ export default function App() {
         setUser(data.user)
         setLoading(false)
       })
-      .catch((err) => {
-        console.error('Failed to fetch user', err)
+      .catch(() => {
         setLoading(false)
       })
   }, [])
@@ -38,9 +39,12 @@ export default function App() {
       }
 
       fetch('/api/me')
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
+          return res.json()
+        })
         .then((data) => setUpstreamData(data))
-        .catch((err) => console.error('Failed to fetch upstream data', err))
+        .catch((err: Error) => setUpstreamError(err.message))
     }
   }, [path, user, loading])
 
@@ -54,13 +58,28 @@ export default function App() {
     return (
       <div style={{ padding: '2rem' }}>
         <nav>
-           <a href="/">Home</a>
+          <a href="/">Home</a>
         </nav>
         <h1>Welcome, {user.name || user.email || user.sub}</h1>
         <p>This is your protected dashboard.</p>
+
         <h3>Upstream Data (from /api/me):</h3>
-        <pre>{JSON.stringify(upstreamData, null, 2)}</pre>
-        <form method="POST" action="/auth/logout">
+        {upstreamError ? (
+          <p style={{ color: 'red' }}>Failed to load upstream data: {upstreamError}</p>
+        ) : (
+          <pre>{JSON.stringify(upstreamData, null, 2)}</pre>
+        )}
+
+        <details style={{ marginTop: '2rem', fontSize: '0.85rem', color: '#666' }}>
+          <summary>No JWT in your browser — verify it</summary>
+          <p style={{ marginTop: '0.5rem' }}>
+            Open DevTools → Application → Cookies → localhost. You should see only{' '}
+            <code>__Host-session</code>. No access token. No JWT. That&apos;s bezzie working
+            correctly — tokens stay in the Worker, never in the browser.
+          </p>
+        </details>
+
+        <form method="POST" action="/auth/logout" style={{ marginTop: '1rem' }}>
           <button type="submit">Logout</button>
         </form>
       </div>
@@ -75,13 +94,24 @@ export default function App() {
       </nav>
       <h1>bezzie demo</h1>
       <p>A BFF OAuth 2.0 auth library for Cloudflare Workers.</p>
+      <p>
+        Available on npm:{' '}
+        <a href="https://www.npmjs.com/package/bezzie" target="_blank" rel="noreferrer">
+          npmjs.com/package/bezzie
+        </a>
+      </p>
       {user ? (
         <a href="/dashboard">
           <button>Go to dashboard</button>
         </a>
       ) : (
-        <a href="/auth/login?returnTo=/dashboard">
-          <button>Login</button>
+        <a
+          href="/auth/login?returnTo=/dashboard"
+          onClick={() => setLoginLoading(true)}
+        >
+          <button disabled={loginLoading}>
+            {loginLoading ? 'Redirecting...' : 'Login'}
+          </button>
         </a>
       )}
     </div>
