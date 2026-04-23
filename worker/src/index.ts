@@ -40,7 +40,10 @@ export default {
         },
       })
       const data = await res.json()
-      return c.json(data, res.status as any)
+      return new Response(JSON.stringify(data), {
+        status: res.status,
+        headers: { 'Content-Type': 'application/json' },
+      })
     })
 // Catch-all: delegate to static assets (serves index.html for unknown paths)
     app.all('*', (c) => c.env.ASSETS.fetch(c.req.raw))

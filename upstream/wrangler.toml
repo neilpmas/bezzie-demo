@@ -3,5 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
 [vars]
-AUTH0_DOMAIN = ""
-AUTH0_AUDIENCE = ""
+AUTH0_DOMAIN = ""    # e.g. "your-tenant.auth0.com"
+AUTH0_AUDIENCE = ""  # e.g. "https://api.bezzie-demo.com"
+# WORKER_ORIGIN is the URL of the BFF Worker — used to restrict CORS.
+# Local dev: http://localhost:8787  Production: https://your-worker-url
+WORKER_ORIGIN = "http://localhost:8787"

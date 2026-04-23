@@ -3,11 +3,25 @@ import { createRemoteJWKSet, jwtVerify } from 'jose'
 type Env = {
   AUTH0_DOMAIN: string
   AUTH0_AUDIENCE: string
+  WORKER_ORIGIN: string
+}
+
+function corsHeaders(origin: string): Record<string, string> {
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Authorization',
+  }
 }
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
+    const cors = corsHeaders(env.WORKER_ORIGIN)
+
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: cors })
+    }
 
     if (url.pathname === '/api/me' && request.method === 'GET') {
       const authHeader = request.headers.get('Authorization')
@@ -15,7 +29,7 @@ export default {
       if (!authHeader?.startsWith('Bearer ')) {
         return new Response(JSON.stringify({ error: 'unauthorized' }), {
           status: 401,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...cors },
         })
       }
 
@@ -32,7 +46,7 @@ export default {
       } catch {
         return new Response(JSON.stringify({ error: 'forbidden' }), {
           status: 403,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...cors },
         })
       }
 
@@ -44,7 +58,7 @@ export default {
         }),
         {
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...cors },
         }
       )
     }

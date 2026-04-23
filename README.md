@@ -1,6 +1,6 @@
 # bezzie-demo
 
-A demo app for [bezzie](https://github.com/neilpmas/bezzie) — a BFF (Backend for Frontend) OAuth 2.0 auth library for Cloudflare Workers.
+A demo app for [bezzie](https://github.com/neilpmas/bezzie) — a BFF (Backend for Frontend) OAuth 2.0 auth library for Cloudflare Workers. Available on npm: [npmjs.com/package/bezzie](https://www.npmjs.com/package/bezzie).
 
 **Live demo:** [bezzie-demo.neilmason.dev](https://bezzie-demo.neilmason.dev)
 
@@ -27,7 +27,7 @@ Browser → Worker (bezzie, session cookie) → Upstream API (Bearer token)
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) 18+
-- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) — `npm install -g wrangler`
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) — `npm install -g wrangler` (or use `npx wrangler` without a global install)
 - A free [Auth0](https://auth0.com) account
 - A free [Cloudflare](https://cloudflare.com) account (for deployment — not needed for local dev)
 
@@ -64,10 +64,25 @@ Save changes. Note your **Domain**, **Client ID**, and **Client Secret** — you
 
 ### 2. Create an API
 
+This gives the access token an `audience` claim, which the upstream API validates.
+
 1. Go to **Applications → APIs → Create API**
 2. Name: `bezzie-demo`
 3. Identifier (audience): `https://api.bezzie-demo.com` (or any URL — just needs to match your config)
 4. Click **Create**
+
+> **Why do I need an API?** The upstream Worker validates the Bearer token's `audience` claim (`aud`) against this identifier. Without it, Auth0 issues opaque tokens that can't be verified as JWTs. The identifier doesn't need to be a real URL — it's just a string that both the BFF and upstream agree on.
+
+### 3. Configure the upstream Worker
+
+The upstream Worker validates Bearer tokens against Auth0's JWKS. Add its credentials to `upstream/wrangler.toml`:
+
+```toml
+[vars]
+AUTH0_DOMAIN = "your-tenant.auth0.com"
+AUTH0_AUDIENCE = "https://api.bezzie-demo.com"   # must match the API Identifier above
+WORKER_ORIGIN = "http://localhost:8787"           # update to your deployed worker URL in production
+```
 
 ---
 
@@ -86,7 +101,7 @@ cd frontend && npm install && cd ..
 Create a KV namespace for local development:
 
 ```sh
-cd worker && wrangler kv namespace create SESSION_KV --preview
+cd worker && npx wrangler kv namespace create SESSION_KV --preview
 ```
 
 Copy the `preview_id` from the output and add it to `worker/wrangler.toml`:
@@ -94,7 +109,7 @@ Copy the `preview_id` from the output and add it to `worker/wrangler.toml`:
 ```toml
 [[kv_namespaces]]
 binding = "SESSION_KV"
-id = ""           # fill in for production: wrangler kv namespace create SESSION_KV
+id = ""           # fill in for production: npx wrangler kv namespace create SESSION_KV
 preview_id = ""   # paste the preview_id from the command above
 ```
 
