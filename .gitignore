@@ -9,6 +9,7 @@ upstream/.dev.vars
 
 # Production config — contains real values, not for source control
 worker/wrangler.production.toml
+upstream/wrangler.production.toml
 
 .idea
 
