@@ -1,0 +1,165 @@
+/* Design tokens — from style-system */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-500.woff2') format('woff2');
+}
+
+:root {
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+  --text-6xl:  3.75rem;
+
+  --leading-tight:   1.2;
+  --leading-snug:    1.375;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  --font-normal:   400;
+  --font-medium:   500;
+  --font-semibold: 600;
+  --font-bold:     700;
+
+  /* Colours — light theme */
+  --color-bg:             #F4F3EF;
+  --color-surface:        #FFFFFF;
+  --color-surface-raised: #F3F2EF;
+
+  --color-border:         #E5E3DE;
+  --color-border-subtle:  #EEECE8;
+
+  --color-text:           #1A1916;
+  --color-text-secondary: #5E5C57;
+  --color-text-muted:     #9C9A94;
+
+  /* Semantic colours */
+  --color-error:          #DC2626;
+  --color-error-subtle:   #FEF2F2;
+  --color-success:        #16A34A;
+  --color-success-subtle: #F0FDF4;
+
+  /* Focus */
+  --color-focus-ring: rgba(124, 58, 237, 0.35);
+
+  /* Transitions */
+  --transition-base: 0.15s ease;
+
+  /* Accent — violet */
+  --color-accent:        #7C3AED;
+  --color-accent-hover:  #6D28D9;
+  --color-accent-subtle: #F5F0FF;
+  --color-accent-fg:     #FFFFFF;
+
+  /* Gradient */
+  --gradient-heading: linear-gradient(135deg, #7C3AED 0%, #E84D8B 100%);
+
+  /* Spacing */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.10);
+
+  /* Layout */
+  --width-content: 720px;
+  --width-wide:    1100px;
+  --nav-height:    60px;
+}
+
+[data-theme="dark"] {
+  --color-bg:             #111110;
+  --color-surface:        #1A1917;
+  --color-surface-raised: #222120;
+
+  --color-border:         #2E2C28;
+  --color-border-subtle:  #252320;
+
+  --color-text:           #F5F4F1;
+  --color-text-secondary: #A8A49C;
+  --color-text-muted:     #6B6760;
+
+  --color-error:          #F87171;
+  --color-error-subtle:   #2D0A0A;
+  --color-success:        #4ADE80;
+  --color-success-subtle: #0A2D14;
+
+  --color-focus-ring: rgba(159, 95, 255, 0.45);
+
+  --color-accent:        #9F5FFF;
+  --color-accent-hover:  #B47FFF;
+  --color-accent-subtle: #2D1A4A;
+  --color-accent-fg:     #FFFFFF;
+
+  --gradient-heading: linear-gradient(135deg, #9F5FFF 0%, #E84D8B 100%);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.5);
+}
