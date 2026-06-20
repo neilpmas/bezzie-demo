@@ -23,6 +23,7 @@ export default {
       audience: env.AUTH0_AUDIENCE,
       adapter: cloudflareKVAdapter(env.SESSION_KV),
       baseUrl: env.APP_BASE_URL,
+      defaultReturnTo: '/dashboard',
     })
 
     const app = new Hono<{ Bindings: Env; Variables: Variables }>()
