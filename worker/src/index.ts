@@ -10,7 +10,7 @@ type Env = {
   APP_BASE_URL: string
   UPSTREAM_URL: string
   SESSION_KV: KVNamespace
-  ASSETS: Fetcher  // add this
+  ASSETS: Fetcher
 }
 
 
@@ -46,7 +46,6 @@ export default {
         headers: { 'Content-Type': 'application/json' },
       })
     })
-// Catch-all: delegate to static assets (serves index.html for unknown paths)
     app.all('*', (c) => c.env.ASSETS.fetch(c.req.raw))
 
     return app.fetch(request, env, ctx)
