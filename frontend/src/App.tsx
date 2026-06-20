@@ -34,7 +34,7 @@ export default function App() {
   useEffect(() => {
     if (path === '/dashboard' && !loading) {
       if (!user) {
-        window.location.href = '/auth/login?returnTo=/dashboard'
+        window.location.href = '/auth/login'
         return
       }
 
@@ -165,7 +165,7 @@ export default function App() {
               <a href="/dashboard" className="btn btn-primary">Go to dashboard</a>
             ) : (
               <a
-                href="/auth/login?returnTo=/dashboard"
+                href="/auth/login"
                 className="btn btn-primary"
                 onClick={() => setLoginLoading(true)}
                 aria-disabled={loginLoading}
