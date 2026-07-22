@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "bezzie": "^1.2.0",
-    "hono": "^4.12.30"
+    "hono": "^4.12.31"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260701.1",
