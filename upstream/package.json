@@ -8,7 +8,7 @@
     "build": "tsc --noEmit"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260819.1",
+    "@cloudflare/workers-types": "^5.20260823.1",
     "typescript": "^6.0.3",
     "wrangler": "^4.124.0"
   },
