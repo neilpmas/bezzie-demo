@@ -14,13 +14,13 @@ binding = "ASSETS"
 
 
 [vars]
-AUTH0_DOMAIN = ""       # e.g. your-tenant.us.auth0.com
-AUTH0_CLIENT_ID = ""    # from your Auth0 application
-AUTH0_AUDIENCE = ""     # e.g. https://api.your-project.com
-APP_BASE_URL = ""       # e.g. https://bezzie-demo-worker.<account>.workers.dev or your custom domain
-UPSTREAM_URL = ""       # URL of your deployed upstream worker
+AUTH0_DOMAIN = "dev-16c3oauv6q5ojze3.us.auth0.com"
+AUTH0_CLIENT_ID = "hKP0OAniWYz8SyUKZD6bIC4qCoDuZeAh"
+AUTH0_AUDIENCE = "https://api.bezzie-demo.com"
+APP_BASE_URL = "http://localhost:8787"
+UPSTREAM_URL = "http://localhost:8788"
 
 [[kv_namespaces]]
 binding = "SESSION_KV"
-id = ""           # fill in after: wrangler kv namespace create SESSION_KV
-preview_id = ""   # fill in after: wrangler kv namespace create SESSION_KV --preview
+id = "634eee0f9e724d8da37ad5b79c0405d3"           # local dev only — replace with a real prod namespace id before deploying
+preview_id = "634eee0f9e724d8da37ad5b79c0405d3"
