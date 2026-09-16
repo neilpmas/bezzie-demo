@@ -51,13 +51,20 @@ export default {
     // Security section).
     app.use('*', async (c, next) => {
       const contributions = await auth.cspContributions()
+      // Union each directive rather than letting one side overwrite the
+      // other — bezzie's empty connect-src/frame-src mean "the login flow
+      // doesn't need this," not "the app doesn't need this." The app's own
+      // connect-src 'self' (for its same-origin /api/* fetches) must survive
+      // regardless of what bezzie contributes.
       const csp: Record<string, string[]> = {
         'default-src': ["'self'"],
         'script-src': ["'self'"],
         'style-src': ["'self'"],
         'img-src': ["'self'"],
         'connect-src': ["'self'"],
-        ...contributions,
+      }
+      for (const [directive, sources] of Object.entries(contributions)) {
+        csp[directive] = [...new Set([...(csp[directive] ?? []), ...sources])]
       }
       const header = Object.entries(csp)
         .map(([directive, sources]) => `${directive} ${sources.join(' ')}`.trim())
