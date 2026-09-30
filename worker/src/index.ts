@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
-import { createBezzie, providers, cloudflareKVAdapter } from 'bezzie'
-import type { Bezzie, Variables } from 'bezzie'
+import { createBezzie, providers, cloudflareKVAdapter, cloudflareRateLimitStore } from 'bezzie'
+import type { Bezzie, CloudflareRateLimitBinding, Variables } from 'bezzie'
 
 type Env = {
   AUTH0_DOMAIN: string
@@ -10,6 +10,7 @@ type Env = {
   APP_BASE_URL: string
   UPSTREAM_URL: string
   SESSION_KV: KVNamespace
+  AUTH_RATE_LIMITER: CloudflareRateLimitBinding
   ASSETS: Fetcher
 }
 
@@ -34,6 +35,17 @@ function getAuth(env: Env): Bezzie<Record<string, unknown>> {
       // cookies get the __Host- prefix anyway and become unreliable
       // (browser-dependent) over HTTP.
       secureCookies: env.APP_BASE_URL.startsWith('https://'),
+      // Count /login and /callback attempts in a Cloudflare Rate Limiting
+      // binding (limit 5 per 60s, set in wrangler config) rather than KV.
+      // bezzie's own limit is deliberately higher than the binding's, so its
+      // in-memory pre-filter never trips first — a 429 here means the binding
+      // did the rejecting. windowSeconds matches the binding's period so
+      // Retry-After is honest.
+      rateLimit: {
+        store: cloudflareRateLimitStore(env.AUTH_RATE_LIMITER),
+        limit: 10,
+        windowSeconds: 60,
+      },
     })
   }
   return auth
