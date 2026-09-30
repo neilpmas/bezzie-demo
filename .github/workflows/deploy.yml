@@ -24,11 +24,21 @@ jobs:
         run: npm install && npm run build
         working-directory: frontend
 
+      - name: Write upstream production config
+        env:
+          CONFIG: ${{ secrets.UPSTREAM_WRANGLER_PRODUCTION_TOML }}
+        run: echo "$CONFIG" > upstream/wrangler.production.toml
+
       - name: Deploy upstream worker
         run: npm install && npx wrangler deploy --config wrangler.production.toml
         working-directory: upstream
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Write BFF worker production config
+        env:
+          CONFIG: ${{ secrets.WORKER_WRANGLER_PRODUCTION_TOML }}
+        run: echo "$CONFIG" > worker/wrangler.production.toml
 
       - name: Deploy BFF worker
         run: npm install && npx wrangler deploy --config wrangler.production.toml
