@@ -67,13 +67,23 @@ export default {
       // other — bezzie's empty connect-src/frame-src mean "the login flow
       // doesn't need this," not "the app doesn't need this." The app's own
       // connect-src 'self' (for its same-origin /api/* fetches) must survive
-      // regardless of what bezzie contributes.
+      // regardless of what bezzie contributes. The same goes for form-action:
+      // bezzie contributes only the IdP origin, but the Logout button is a
+      // same-origin form POST to /auth/logout, so 'self' has to be there too
+      // or the browser blocks the submission.
+      //
+      // script-src also allows Cloudflare's Web Analytics beacon. Cloudflare
+      // injects it into the HTML at the edge (it reports back through this
+      // site's own /cdn-cgi/rum, which connect-src 'self' already covers).
+      // Without this the browser blocks it and page views stop being counted;
+      // it is the one non-'self' script origin the demo allows.
       const csp: Record<string, string[]> = {
         'default-src': ["'self'"],
-        'script-src': ["'self'"],
+        'script-src': ["'self'", 'https://static.cloudflareinsights.com'],
         'style-src': ["'self'"],
         'img-src': ["'self'"],
         'connect-src': ["'self'"],
+        'form-action': ["'self'"],
       }
       for (const [directive, sources] of Object.entries(contributions)) {
         csp[directive] = [...new Set([...(csp[directive] ?? []), ...sources])]
@@ -83,6 +93,15 @@ export default {
         .join('; ')
       c.header('Content-Security-Policy', header)
       await next()
+      // c.header() only reaches responses Hono builds itself (JSON, redirects).
+      // The pages, scripts and styles come back from ASSETS.fetch as a raw
+      // Response, which drops it — so the HTML was being served with no CSP at
+      // all. Apply the policy to any response that still doesn't carry one.
+      if (!c.res.headers.has('Content-Security-Policy')) {
+        const res = new Response(c.res.body, c.res)
+        res.headers.set('Content-Security-Policy', header)
+        c.res = res
+      }
     })
 
     app.route('/auth', auth.routes())
