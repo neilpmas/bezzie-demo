@@ -11,6 +11,14 @@ compatibility_date = "2024-01-01"
 directory = "../frontend/dist"
 not_found_handling = "single-page-application"
 binding = "ASSETS"
+# Without this, any path that matches a real file ("/" is index.html) is served
+# straight from the asset layer and never reaches the Worker, so the landing
+# page gets no Content-Security-Policy header. Send everything through the
+# Worker except the static folders, whose files don't need the header (the
+# policy is enforced from the HTML document) and shouldn't cost a Worker
+# invocation each. Don't shorten this to ["/"]: with the array form, anything
+# not listed skips the Worker, which silently breaks /api/* and /auth/*.
+run_worker_first = ["/*", "!/assets/*", "!/fonts/*"]
 
 
 [vars]

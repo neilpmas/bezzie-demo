@@ -289,6 +289,9 @@ compatibility_date = "2024-01-01"
 directory = "../frontend/dist"
 not_found_handling = "single-page-application"
 binding = "ASSETS"
+# Pages go through the Worker so they get the CSP header; static files skip it.
+# Keep the "/*" — a bare ["/"] makes /api/* and /auth/* skip the Worker.
+run_worker_first = ["/*", "!/assets/*", "!/fonts/*"]
 
 [vars]
 AUTH0_DOMAIN    = "your-tenant.auth0.com"
