@@ -18,9 +18,9 @@ type Env = {
 // persists across requests on a warm isolate, instead of every request
 // paying for a fresh OIDC discovery fetch — which matters now that
 // cspContributions() below calls it on every request too.
-let auth: Bezzie<Record<string, unknown>> | undefined
+let auth: Bezzie | undefined
 
-function getAuth(env: Env): Bezzie<Record<string, unknown>> {
+function getAuth(env: Env): Bezzie {
   if (!auth) {
     auth = createBezzie({
       ...providers.auth0(env.AUTH0_DOMAIN),
@@ -51,6 +51,7 @@ function getAuth(env: Env): Bezzie<Record<string, unknown>> {
   return auth
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const auth = getAuth(env)
@@ -129,4 +130,4 @@ export default {
 
     return app.fetch(request, env, ctx)
   }
-}
+} satisfies ExportedHandler<Env>

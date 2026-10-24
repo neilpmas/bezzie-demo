@@ -14,6 +14,7 @@ function corsHeaders(origin: string): Record<string, string> {
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
@@ -65,4 +66,4 @@ export default {
 
     return new Response('Not Found', { status: 404 })
   },
-}
+} satisfies ExportedHandler<Env>
